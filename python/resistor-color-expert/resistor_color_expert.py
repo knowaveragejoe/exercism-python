@@ -33,19 +33,35 @@ def resistor_label(colors):
     
     # Determine tolerance usng multiplier if necessary
     if len(colors) == 4:    
+        resistance = (first_digit * 10 + second_digit) * 10 ** third_digit
+
         tolerance = TOLERANCES[colors[3]]
     elif len(colors) == 5:
-        tolerance = TOLERANCES[colors[3]] * 10 ** TOLERANCES[colors[4]]
-    
-    resistance = (first_digit * 10 + second_digit) * 10 ** third_digit
-    
+        fourth_digit = RESISTOR_COLOR_CODES[colors[3]]
+
+        resistance = (first_digit * 100 + second_digit * 10 + third_digit) * 10 ** fourth_digit
+
+        tolerance = TOLERANCES[colors[4]]
+
+    tolerance_string = f"±{tolerance}%"
+
     if resistance < 1000:
-        return f"{resistance} ohms ±{tolerance}%"
+        resistance_float = resistance
+        ohms_string = "ohms"
+        resistance_string = f"{resistance_float:.2f}".rstrip('0').rstrip('.') if '.' in f"{resistance_float:.2f}" else f"{resistance_float}"        
     elif resistance < 1000000:
-        return f"{resistance / 1000} kiloohms ±{tolerance}%"
+        resistance_float = resistance / 1000
+        ohms_string = "kiloohms"
+        resistance_string = f"{resistance_float:.2f}".rstrip('0').rstrip('.') if '.' in f"{resistance_float:.2f}" else f"{resistance_float}"        
     elif resistance < 1000000000:
-        return f"{resistance / 1000000} megaohms ±{tolerance}%"
+        resistance_float = resistance / 1000000
+        ohms_string = "megaohms"
+        resistance_string = f"{resistance_float:.2f}".rstrip('0').rstrip('.') if '.' in f"{resistance_float:.2f}" else f"{resistance_float}"        
     elif resistance < 1000000000000:
-        return f"{resistance / 1000000000} gigaohms ±{tolerance}%"
+        resistance_float = resistance / 1000000000
+        ohms_string = "gigaohms"
+        resistance_string = f"{resistance_float:.2f}".rstrip('0').rstrip('.') if '.' in f"{resistance_float:.2f}" else f"{resistance_float}"        
     else:
-        return "Invalid resistance value"    
+        return "invalid resistance"
+
+    return f"{resistance_string} {ohms_string} {tolerance_string}"
