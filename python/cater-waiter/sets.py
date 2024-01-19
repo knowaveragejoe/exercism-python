@@ -93,8 +93,8 @@ def compile_ingredients(dishes):
 
     This function should return a `set` of all ingredients from all listed dishes.
     """
-
-    return set().update(dish for dish in dishes)
+    
+    return set().union(*dishes)
 
 def separate_appetizers(dishes, appetizers):
     """Determine which `dishes` are designated `appetizers` and remove them.
@@ -124,5 +124,11 @@ def singleton_ingredients(dishes, intersection):
 
     The function should return a `set` of ingredients that only appear in a single dish.
     """
-
-    pass
+    
+    ingredients = [ingredient for ingredients in dishes for ingredient in ingredients]
+    
+    ingredients_count = {}
+    for ingredient in ingredients:
+        ingredients_count[ingredient] = ingredients_count.get(ingredient, 0) + 1
+        
+    return set([ingredient for ingredient, count in ingredients_count.items() if count == 1])
